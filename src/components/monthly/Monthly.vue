@@ -1,5 +1,6 @@
 <template>
   <section>
+    <!--<a href="Monthly.vue"><span>这是超链接</span></a>-->
     <el-container>
       <el-aside>
         <el-menu
@@ -72,94 +73,119 @@
               </el-submenu>
             </el-submenu>
             <el-menu-item index="3">消息中心</el-menu-item>
-            <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">收藏管理</a></el-menu-item>
           </el-menu>
         </el-header>
 
         <el-main>
-          <el-table v-bind:data="tableData">
-            <el-table-column prop="date" label="日期" width="140"></el-table-column>
-            <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-            <el-table-column prop="address" label="地址"></el-table-column>
-            <el-table-column label="操作">
-              <!--<span>-->
-                <!--<el-button type="text" size="small" v-on:click="" icon="edit">编 辑</el-button>-->
-                <el-button type="text" size="small" v-on:click="" icon="delete">删 除</el-button>
-              <!--</span>-->
-            </el-table-column>
+          <el-table v-bind:data="tableData" :row-class-name="tableColor">
+            <el-table-column prop="title" label="标题" width="200"></el-table-column>
+            <el-table-column prop="content" label="内容" width="200"></el-table-column>
+            <el-table-column width="200"></el-table-column>
+            <el-table-column prop="authors" label="作者"></el-table-column>
           </el-table>
+          <div class="pager">
+            <el-pagination v-bind:page-size="pageSize"
+                           layout="total, sizes, prev, pager, next, jumper" v-bind:page-sizes="pageSizes"
+                           v-bind:current-page="currentPage"
+                           :total="1000"
+                           v-on:size-change="sizeChange" v-on:current-change="pageIndexChange">
+
+            </el-pagination>
+          </div>
         </el-main>
+
       </el-container>
     </el-container>
   </section>
 </template>
-
 <script>
   export default {
     data() {
-      const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      };
       return {
+        pageSize: 10, //每页数量
+        pageSizes: [10, 20, 50, 100],
+        currentPage: 1,//页码
         activeIndex: '1',
         activeIndex2: '1',
-        tableData:[
-          {
-            date: '2016-05-02',
-            name: '燕潇洒',
-            address: '苏州市工业园区'
-          },{
-            date: '2016-05-02',
-            name: '袁泽重',
-            address: '上海市宝山区'
-          },{
-            date: '2016-05-02',
-            name: '纵曼曼',
-            address: '合肥市瑶海区'
-          },{
-            date: '2016-05-02',
-            name: '赵发祥',
-            address: '合肥市庐阳区'
-          },{
-            date: '2016-05-02',
-            name: '胡月',
-            address: '合肥市蜀山区'
-          }
-        ]
+        dialogVisible: false,
+        tableData: []
       };
     },
+    mounted: function () {
+      var self=this;
+      self.$nextTick(function(){
+        self.requestData();
+      });
+    },
     methods: {
+      tableColor({row, rowIndex}) {
+        console.log("row="+rowIndex)
+        if (rowIndex % 2 === 1) {
+          return 'warning-row';
+        } else if (rowIndex % 2 === 0) {
+          return 'success-row';
+        }
+        return '';
+      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
-
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
+      },
+      sizeChange(val){ //每页数量改变,
+        this.pageSize = val;
+        this.requestData();
+      },
+      pageIndexChange(val){//页码改变
+          this.currentPage = val;
+          this.requestData();
+      },
+      requestData() {
+        //加载框设置
+         var mLoading = this.$loading({fullscreen: true,
+          text: '数据加载中',
+          background: 'rgba(255, 255, 255, 0.5)'});
 
-        //遍历所有元素,修改背景颜色
-        var allElement=document.getElementsByTagName("*"); //得到所有元素
-        for (let i = 0; i < allElement.length; i++) {
-           var element = allElement[i];
-           element.style.background = "#0f0";
-        }
+         //接口请求
+        var self = this;
+        self.$axios({
+          method: 'get',
+          url: 'https://api.apiopen.top/getTangPoetry?page='+this.currentPage+'&count='+this.pageSize
+        })
+          .then(function (response) {
+            mLoading.close();
+            self.tableData = response.data.result;
+          }).catch(function (error) {
+            this.$alert(error.message+"", '网络错误', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${ action }`
+                });
+              }
+            });
+        });
+        //请求结束
       }
     }
   }
 </script>
 
 <style>
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
+  .el-table .warning-row {
+    background: oldlace;
   }
 
-  .el-aside {
-    color: #333;
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+  .pager{
+    padding: 10px;
+    background-color: lightgray;
   }
 </style>

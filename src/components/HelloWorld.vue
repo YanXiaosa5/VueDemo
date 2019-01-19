@@ -23,41 +23,41 @@
       submitLogin(){
 
         alert("点击了")
-        // var self = this;
-        // self.$axios({
-        //   method: 'post',
-        //   url: 'http://10.0.0.124/api/public/login/v1',
-        //   data: {
-        //     account: "admin",
-        //     password: "123456"
-        //   }
-        // })
-        //
-        //   .then(function (response) {
-        //     if(response.data.code==200){
-        //       this.$message({
-        //         showClose: true,
-        //         message: "请求成功",
-        //         type: type,
-        //         duration:1500
-        //       })
-        //     }else{//请求失败
-        //       this.$message({
-        //         showClose: true,
-        //         message: "请求失败",
-        //         type: type,
-        //         duration:1500
-        //       })
-        //     }
-        //   })
-        //   .catch(function (error) {
-        //     this.$message({
-        //       showClose: true,
-        //       message: "请求错误",
-        //       type: type,
-        //       duration:1500
-        //     })
-        //   });
+        var self = this;
+        self.$axios({
+          method: 'post',
+          url: 'http://10.0.0.124/api/public/login/v1',
+          data: {
+            account: "admin",
+            password: "123456"
+          }
+        })
+
+          .then(function (response) {
+            if(response.data.code==200){
+              this.$message({
+                showClose: true,
+                message: "请求成功",
+                type: type,
+                duration:1500
+              })
+            }else{//请求失败
+              this.$message({
+                showClose: true,
+                message: "请求失败",
+                type: type,
+                duration:1500
+              })
+            }
+          })
+          .catch(function (error) {
+            this.$message({
+              showClose: true,
+              message: "请求错误",
+              type: type,
+              duration:1500
+            })
+          });
       }
     }
   }

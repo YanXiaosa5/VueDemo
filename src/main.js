@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import axios from 'axios'
+import $ from 'jquery'
 import '../node_modules/element-ui/lib/theme-chalk/index.css';//elementUI的样式文件要单独引入
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -17,11 +18,11 @@ new Vue({
   template: '<App/>'
 })
 
+axios.interceptors.response.use(response => {
+  //拦截器
+  return response;
+},error => {
+  return Promise.reject(error)
+});
 
-var httpClient = axios.create();
-httpClient.defaults.timeout = 5000;
-httpClient.defaults.baseURL = "http://47.105.61.82";
-
-Vue.prototype.$axios = httpClient;//将axios改写为Vue的原型属性，解决其它组件中无法使用axios命令的问题
-
-
+Vue.prototype.$axios = axios;
