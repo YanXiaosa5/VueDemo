@@ -84,6 +84,7 @@
             <el-table-column prop="authors" label="作者"></el-table-column>
           </el-table>
           <div class="pager">
+
             <el-pagination v-bind:page-size="pageSize"
                            layout="total, sizes, prev, pager, next, jumper" v-bind:page-sizes="pageSizes"
                            v-bind:current-page="currentPage"
