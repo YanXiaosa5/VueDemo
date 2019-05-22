@@ -11,11 +11,7 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: '子节点',
-      component: node
-    },
+    { name: '子节点', path: '/', component: node },
     { name: "manifests", path: "/manifests", component: Manifests },
     { name: "daily", path: "/daily", component: Daily },
     { name: "monthly", path: "/monthly", component: Monthly },
