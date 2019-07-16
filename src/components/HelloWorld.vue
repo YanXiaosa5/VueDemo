@@ -11,6 +11,8 @@
     name:'login',
     data(){
       return {
+	  
+	  
         userName:'admin',
         password:'123456',
         rememberPassword:false
